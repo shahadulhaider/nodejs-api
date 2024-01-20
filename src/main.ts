@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { LoggingInterceptor } from './shared/logging.interceptor';
+import { MongoErrorFilter } from './shared/mongo-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,6 +12,7 @@ async function bootstrap() {
   app.setGlobalPrefix(prefix);
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useGlobalFilters(new MongoErrorFilter());
 
   const config = app.get(ConfigService);
   const port = config.get('port');
