@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from './user.schema';
-import { Model } from 'mongoose';
-import { CreateUserDto } from './dto/create0user';
+import mongoose, { Model, isValidObjectId } from 'mongoose';
+import { CreateUserDto } from './dto/create-user';
+import { UpdateUserDto } from './dto/update-user';
 
 @Injectable()
 export class UsersService {
@@ -12,10 +13,70 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const createdUser = new this.userModel(createUserDto);
-    return createdUser.save();
+    return await createdUser.save();
   }
 
   async findAll(): Promise<User[]> {
-    return this.userModel.find().exec();
+    return await this.userModel.find();
+  }
+
+  async getUser(id: string): Promise<User> {
+    const user = await this.userModel.findById(id);
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user;
+  }
+
+  async getUserbyEmailOrName(search: string): Promise<User> {
+    console.log({ search });
+    const user = await this.userModel.findOne({
+      $or: [
+        {
+          name: search,
+        },
+        {
+          email: search,
+        },
+      ],
+    });
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user;
+  }
+
+  async updateUser(
+    id: string,
+    updateUserData: Partial<UpdateUserDto>,
+  ): Promise<User> {
+    const user = await this.userModel.findOneAndUpdate(
+      { _id: id },
+      updateUserData,
+      { new: true },
+    );
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user;
+  }
+
+  async deleteUser(id: string): Promise<User> {
+    const user = await this.userModel.findOneAndDelete(
+      { _id: id },
+      { new: true },
+    );
+
+    if (!user) {
+      throw new NotFoundException();
+    }
+
+    return user;
   }
 }
