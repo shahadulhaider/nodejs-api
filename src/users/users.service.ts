@@ -31,7 +31,6 @@ export class UsersService {
   }
 
   async getUserbyEmailOrName(search: string): Promise<User> {
-    console.log({ search });
     const user = await this.userModel.findOne({
       $or: [
         {

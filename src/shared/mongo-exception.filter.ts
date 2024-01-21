@@ -15,7 +15,6 @@ import * as mongoose from 'mongoose';
 )
 export class MongoErrorFilter implements ExceptionFilter {
   catch(exception: mongoose.mongo.MongoServerError, host: ArgumentsHost) {
-    console.log('===========');
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
