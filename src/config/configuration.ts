@@ -4,4 +4,9 @@ export default () => ({
     uri: process.env.MONGO_DB_URI || 'mongodb://localhost:27017',
     dbName: process.env.MONGO_DB_NAME || 'opika-backend-api',
   },
+  redis: {
+    host: process.env.REDIS_HOST || 'localhost',
+    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+    ttl: parseInt(process.env.CACHE_TTL, 10) || 300000, //miliseconds
+  },
 });
