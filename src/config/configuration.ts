@@ -5,7 +5,7 @@ export default () => ({
     dbName: process.env.MONGO_DB_NAME || 'opika-backend-api',
   },
   redis: {
-    host: process.env.REDIS_HOST || 'localhost',
+    host: process.env.REDIS_HOST || 'redis',
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
     ttl: parseInt(process.env.CACHE_TTL, 10) || 300000, //miliseconds
   },
