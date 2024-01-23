@@ -6,7 +6,7 @@ import configuration from './config/configuration';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './users/users.module';
 import { CacheModule, CacheModuleAsyncOptions } from '@nestjs/cache-manager';
-import { redisStore } from 'cache-manager-redis-yet';
+import {  redisStore } from 'cache-manager-redis-yet';
 
 @Module({
   imports: [
@@ -27,10 +27,13 @@ import { redisStore } from 'cache-manager-redis-yet';
       isGlobal: true,
       useFactory: async (config: ConfigService) => {
         return {
-          store: redisStore,
-          ttl: config.get<number>('redis.ttl'),
-          port: config.get<number>('redis.port'),
-          host: config.get<string>('redis.host'),
+          store: await redisStore({
+            socket: {
+              port: config.get<number>('redis.port'),
+              host: config.get<string>('redis.host'),
+            },
+            ttl: config.get<number>('redis.ttl'),
+          }),
         };
       },
       inject: [ConfigService],

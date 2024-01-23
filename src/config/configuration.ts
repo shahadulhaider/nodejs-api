@@ -7,6 +7,6 @@ export default () => ({
   redis: {
     host: process.env.REDIS_HOST || 'redis',
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
-    ttl: parseInt(process.env.CACHE_TTL, 10) || 300000, //miliseconds
+    ttl: parseInt(process.env.CACHE_TTL, 10) || 5000, //miliseconds
   },
 });
